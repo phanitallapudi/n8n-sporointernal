@@ -1,0 +1,461 @@
+{
+  "active": false,
+  "connections": {
+    "Create Collection in Qdrant": {
+      "main": [
+        []
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get All Collections1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Collection Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Delete Collection",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Collection Details": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Collections": {
+      "main": [
+        [
+          {
+            "node": "Split Out",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Collection": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Loop Over Items1": {
+      "main": [
+        [],
+        [
+          {
+            "node": "Get Collection Details1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Split Out1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Delete Collection1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Collection Details1": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get All Collections1": {
+      "main": [
+        [
+          {
+            "node": "Split Out1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Delete Collection1": {
+      "main": [
+        [
+          {
+            "node": "Loop Over Items1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-17T08:29:38.714Z",
+  "id": "wQwDwu5TBbpJFQnx",
+  "meta": null,
+  "name": "Qdrant Operations Delete Collections",
+  "nodes": [
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "http://sporohealth-internal.eastus.cloudapp.azure.com:6334/collections/sporointernal_docs_hypertension",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"vectors\": {\n    \"size\": 1536,\n    \"distance\": \"Cosine\"\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -700,
+        -100
+      ],
+      "id": "65ce66fb-fff1-4f97-acd2-01c497d12b9a",
+      "name": "Create Collection in Qdrant",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "JwgH9ZP5PGT4bYC6",
+          "name": "Internal Qdrant 6334 "
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -520,
+        -460
+      ],
+      "id": "c9808801-1cf1-466a-96a5-426847d3672f",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        460,
+        -160
+      ],
+      "id": "62384f16-b550-4db6-9b13-4c9759aa0693",
+      "name": "Loop Over Items"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "result.collections",
+        "options": {}
+      },
+      "id": "e4f0699c-5a9b-4502-9d8e-f2064b55ae62",
+      "name": "Split Out",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        220,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9f8db21b-b61f-4e10-970c-5d5a34b23d26",
+              "leftValue": "={{ $json.result.points_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1040,
+        0
+      ],
+      "id": "f417798a-d536-4c43-9eb9-4028ab78d80f",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "url": "=http://sporohealth-internal.eastus.cloudapp.azure.com:6333/collections/{{ $json.name }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        780,
+        -140
+      ],
+      "id": "bf3a9e27-beef-4f0a-ba72-96ccc252d7e9",
+      "name": "Get Collection Details",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AhaHWtxQA9coXTcF",
+          "name": "Internal Qdrant 6333 Production"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "http://sporohealth-internal.eastus.cloudapp.azure.com:6333/collections",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -40,
+        -160
+      ],
+      "id": "fa8064d1-1992-4870-aacf-db514f8131de",
+      "name": "Get All Collections",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AhaHWtxQA9coXTcF",
+          "name": "Internal Qdrant 6333 Production"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://sporohealth-internal.eastus.cloudapp.azure.com:6333/collections/{{ $('Loop Over Items').item.json.name }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1320,
+        -380
+      ],
+      "id": "9ef83277-c884-48d5-9727-ceeff7c2b813",
+      "name": "Delete Collection",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "AhaHWtxQA9coXTcF",
+          "name": "Internal Qdrant 6333 Production"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [
+        480,
+        -860
+      ],
+      "id": "a1a15bf1-82b9-4bd5-b77f-c9c7e313a967",
+      "name": "Loop Over Items1"
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "result.collections",
+        "options": {}
+      },
+      "id": "d6771f5f-d041-449b-9691-0cf45f45a959",
+      "name": "Split Out1",
+      "type": "n8n-nodes-base.splitOut",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -660
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "9f8db21b-b61f-4e10-970c-5d5a34b23d26",
+              "leftValue": "={{ $json.result.points_count }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1060,
+        -700
+      ],
+      "id": "fd901ecd-ea30-49d3-8c2f-93884c58ede4",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "url": "=http://sporohealthdev.eastus.cloudapp.azure.com:6333/collections/{{ $json.name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        800,
+        -840
+      ],
+      "id": "39af85ee-59d1-45ea-ba53-c570d8c5c9c3",
+      "name": "Get Collection Details1"
+    },
+    {
+      "parameters": {
+        "url": "http://sporohealthdev.eastus.cloudapp.azure.com:6333/collections",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -20,
+        -860
+      ],
+      "id": "f9b596da-8f36-4e9e-a028-205ceb45e74b",
+      "name": "Get All Collections1"
+    },
+    {
+      "parameters": {
+        "method": "DELETE",
+        "url": "=http://sporohealthdev.eastus.cloudapp.azure.com:6333/collections/{{ $('Loop Over Items1').item.json.name }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        1340,
+        -1080
+      ],
+      "id": "119ccf5f-d122-4759-ad47-0f641523e213",
+      "name": "Delete Collection1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-18T16:32:35.520Z",
+  "versionId": "871d313a-2672-40d6-a7f8-e4d3035419f8"
+}
