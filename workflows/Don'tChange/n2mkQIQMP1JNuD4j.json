@@ -1,0 +1,237 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Map Fields from Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Map Fields from Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure gpt4o LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PG Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Fields from Webhook": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-12T11:47:48.504Z",
+  "id": "n2mkQIQMP1JNuD4j",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Sporo PDF Analyzer Development",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chat_input }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.session_id}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a49c9d18-18ca-45d2-b9e7-e8e6d46751c2",
+      "name": "Map Fields from Webhook",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -580,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sporoscribe-dev-pdf-analyzer",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        20
+      ],
+      "id": "c6c43824-86e3-48b4-8587-beda877d6f13",
+      "name": "Webhook",
+      "webhookId": "e5aeb2b7-f74b-4238-b46c-e832b296c792",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "apSGiFsve56Wpotl",
+          "name": "Sporo PDF Analyzer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o-mini",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        300
+      ],
+      "id": "2d06bc97-b6e7-4922-a961-7e86e3f355bc",
+      "name": "Azure gpt4o LLM",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "inBBE5tDsOPs9Vzo",
+          "name": "Instance GenAI Whisper Backup Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableName": "sporoscribechatbot",
+        "contextWindowLength": 15
+      },
+      "id": "afe7fdc1-6c6e-4321-a3d0-d0f33884700c",
+      "name": "PG Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -340,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -60,
+        20
+      ],
+      "id": "ad8f8e66-bf91-4ba5-808f-0e502a4124e7",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0a0d3c83-491c-4c64-99e1-059692f89b40",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -820,
+        220
+      ],
+      "webhookId": "0949763f-f3f7-46bf-8676-c050d92e6966"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "options": {
+          "systemMessage": "=You are a document analysis assistant specializing in multi-page PDF reports. You will receive one page at a time and have access to memory. Use this context to determine whether the current page starts a new report or continues the current one. Look for key indicators such as dates, headings, or other markers that denote a new report. Then, extract any date in the format YYYY-MM-DD (if present) and provide a brief summary of the page's content. Your response must be in valid JSON format as specified below, with no extra commentary. If you don't find any date in the context, try to relate it to the previous history and corelate the current text to the previous output which you can analyze to come up with the date based on the previous history, if you not able to provide a date, the return you can't find it even after going back in the history\n\nKey Instruction:\n1. You should only give a single date in the whole string, you can't give the same date again or a different date. Either one date or nothing if you didn't find any"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -420,
+        80
+      ],
+      "id": "f6ba1dad-2203-4845-aa7f-41be3fcf96f7",
+      "name": "AI Agent"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-02-05T14:52:04.315Z",
+      "updatedAt": "2025-02-05T14:52:04.315Z",
+      "id": "C5zoLNqqwpSoXUpH",
+      "name": "Don'tChange"
+    },
+    {
+      "createdAt": "2025-02-05T14:51:59.346Z",
+      "updatedAt": "2025-02-05T14:51:59.346Z",
+      "id": "IztQXWFCwgUrGRab",
+      "name": "Important"
+    }
+  ],
+  "triggerCount": 3,
+  "updatedAt": "2025-02-19T10:55:44.889Z",
+  "versionId": "5d9368f9-7369-45e0-8771-3b642585dcb0"
+}
