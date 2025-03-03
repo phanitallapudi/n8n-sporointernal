@@ -1,0 +1,124 @@
+{
+  "active": true,
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MongoDB": {
+      "main": [
+        []
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "MongoDB",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-03T09:16:23.478Z",
+  "id": "ve7iAnhZUkY3T7n1",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Pyannote to Mongodb Diarization Logs",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "e70855ef-d43d-4cbb-9a9a-684e03d5fb96",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -180,
+        0
+      ],
+      "id": "b07c84fa-11db-4287-9b9e-d26e0fa5b042",
+      "name": "Webhook",
+      "webhookId": "e70855ef-d43d-4cbb-9a9a-684e03d5fb96"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "collection": "annotation_logs",
+        "updateKey": "job_id",
+        "fields": "job_id, status, diarization",
+        "upsert": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.mongoDb",
+      "typeVersion": 1.1,
+      "position": [
+        440,
+        0
+      ],
+      "id": "d4ddba63-c2c5-4c49-88aa-bc789f8a2e04",
+      "name": "MongoDB",
+      "credentials": {
+        "mongoDb": {
+          "id": "Q1UUpMlJiQ9qA0kl",
+          "name": "MongoDB account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "bf4d55df-ab88-43f9-ac73-25e2022272e5",
+              "name": "job_id",
+              "value": "={{ $json.body.jobId }}",
+              "type": "string"
+            },
+            {
+              "id": "815b2545-fef5-48a3-8a95-43f1a559c47c",
+              "name": "status",
+              "value": "={{ $json.body.status }}",
+              "type": "string"
+            },
+            {
+              "id": "e68a1bf2-9058-4bc5-8343-fa52f301ed80",
+              "name": "diarization",
+              "value": "={{ $json.body.output.diarization }}",
+              "type": "array"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        120,
+        0
+      ],
+      "id": "6a9bcc05-d609-4a12-8372-cc285f169fb3",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-03-03T14:19:03.520Z",
+  "versionId": "f34a2169-f995-4b1a-96a9-05f199bbd5da"
+}
