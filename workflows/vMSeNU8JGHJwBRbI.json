@@ -1,0 +1,293 @@
+{
+  "active": false,
+  "connections": {
+    "Google Drive": {
+      "main": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recursive Character Text Splitter": {
+      "ai_textSplitter": [
+        [
+          {
+            "node": "Default Data Loader",
+            "type": "ai_textSplitter",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Default Data Loader": {
+      "ai_document": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_document",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking 'Test Workflow' button": {
+      "main": [
+        [
+          {
+            "node": "Set Google Drive file URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Google Drive file URL": {
+      "main": [
+        [
+          {
+            "node": "Google Drive",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Embeddings Azure OpenAI": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-13T06:25:32.360Z",
+  "id": "vMSeNU8JGHJwBRbI",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Google drive to Qdrant Embeddings by Link",
+  "nodes": [
+    {
+      "parameters": {
+        "operation": "download",
+        "fileId": {
+          "__rl": true,
+          "value": "={{ $('Set Google Drive file URL').item.json.file_url }}",
+          "mode": "url"
+        },
+        "options": {}
+      },
+      "id": "0c0f784d-ae2e-45c3-a6a3-d1521a85a5a4",
+      "name": "Google Drive",
+      "type": "n8n-nodes-base.googleDrive",
+      "position": [
+        300,
+        -20
+      ],
+      "typeVersion": 3,
+      "credentials": {
+        "googleDriveOAuth2Api": {
+          "id": "s3z66qlerhlxI1W6",
+          "name": "Google Drive account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chunkSize": 512,
+        "chunkOverlap": 200,
+        "options": {}
+      },
+      "id": "fe1c2d18-1bc9-4c63-ba56-472bb46e05f1",
+      "name": "Recursive Character Text Splitter",
+      "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
+      "position": [
+        840,
+        340
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "dataType": "binary",
+        "options": {}
+      },
+      "id": "528846ce-6ed4-4462-b5cb-efc8e028071f",
+      "name": "Default Data Loader",
+      "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
+      "position": [
+        680,
+        180
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {},
+      "id": "73bc3ae7-59a7-48e2-8da9-083c41d9e29d",
+      "name": "When clicking 'Test Workflow' button",
+      "type": "n8n-nodes-base.manualTrigger",
+      "position": [
+        -140,
+        -20
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "50025ff5-1b53-475f-b150-2aafef1c4c21",
+              "name": "file_url",
+              "type": "string",
+              "value": "https://drive.google.com/file/d/1nj6C2sQYsJpfvWvsWEJtNs4TO7g0vsNU/view?usp=drive_link"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3d7dbd1a-8393-4efe-82c5-ab25ca705457",
+      "name": "Set Google Drive file URL",
+      "type": "n8n-nodes-base.set",
+      "position": [
+        80,
+        -20
+      ],
+      "typeVersion": 3.3
+    },
+    {
+      "parameters": {
+        "mode": "insert",
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "=drive_to_qdrant",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        520,
+        -20
+      ],
+      "id": "c4e57931-1449-43c6-825e-fc56032f66d5",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "q2GepYCpbOfbgAaZ",
+          "name": "Panindhra GCP QdrantApi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "PUT",
+        "url": "https://923640c1-6f14-458b-b599-7f127de36c06.us-east4-0.gcp.cloud.qdrant.io/collections/drive_to_qdrant",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"vectors\": {\n    \"size\": 1536,\n    \"distance\": \"Cosine\"\n  }\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -80,
+        320
+      ],
+      "id": "cbcfc95f-2190-4644-bb52-f54678500455",
+      "name": "Create Collection for dcbbank",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "T3grHeWqpj4DMo0S",
+          "name": "Panindhra GCP Qdrant Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://923640c1-6f14-458b-b599-7f127de36c06.us-east4-0.gcp.cloud.qdrant.io/collections/drive_to_qdrant/points/delete",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "{\n  \"filter\": {}\n}",
+        "options": {
+          "redirect": {
+            "redirect": {}
+          }
+        }
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        200,
+        260
+      ],
+      "id": "29d65fb2-0475-45e9-bc64-075596ca8d8d",
+      "name": "Delete All Vectors",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "T3grHeWqpj4DMo0S",
+          "name": "Panindhra GCP Qdrant Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "embedding",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        500,
+        200
+      ],
+      "id": "f6996667-5d10-4f15-abea-4a2ce237e462",
+      "name": "Embeddings Azure OpenAI",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-17T08:29:13.837Z",
+  "versionId": "35a5808d-3bb3-4bc2-a1db-27cd47cc1c10"
+}
