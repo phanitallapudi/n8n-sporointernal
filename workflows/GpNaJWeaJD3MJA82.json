@@ -1,0 +1,682 @@
+{
+  "active": false,
+  "connections": {
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Search by Text": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get details by id": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-26T09:07:07.519Z",
+  "id": "GpNaJWeaJD3MJA82",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "ICD 10 code searcher",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "e09636de-78dd-44e1-9fd4-2e46f471d22f",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        340
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## General Websearch Workflow",
+        "height": 527.3027193303974,
+        "width": 969.0343804425795
+      },
+      "id": "ad7e993d-d58c-4c1f-8f8c-7168e4ae25d2",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "ff311357-69ea-4324-921a-b4a455a81893",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "0568077e-86b6-4097-97b5-94903728ffba",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        440,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "1a8e8d0d-76c8-4514-8b21-8cf361790d94",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        260,
+        340
+      ],
+      "id": "07b57803-82ed-4590-8512-03dd3b8a736c",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        660,
+        340
+      ],
+      "id": "3b7a4958-2c4f-4aac-b2dc-433dcef251e1",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        -600
+      ],
+      "id": "86aa26d0-5af3-4367-a67c-4e92160e09ad",
+      "name": "When chat message received",
+      "webhookId": "5ccd9ed6-87e4-46af-896f-40f50df83480"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Get the entity id of the search parameter",
+        "method": "POST",
+        "url": "http://sporohealthdev.eastus.cloudapp.azure.com:5011/icd/entity/search",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "q"
+            },
+            {
+              "name": "useFlexisearch",
+              "valueProvider": "fieldValue",
+              "value": "false"
+            },
+            {
+              "name": "flatResults",
+              "valueProvider": "fieldValue",
+              "value": "true"
+            },
+            {
+              "name": "highlightingEnabled",
+              "valueProvider": "fieldValue",
+              "value": "true"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            },
+            {
+              "name": "API-Version",
+              "valueProvider": "fieldValue",
+              "value": "v2"
+            },
+            {
+              "name": "Accept-Language",
+              "valueProvider": "fieldValue",
+              "value": "en"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        800,
+        340
+      ],
+      "id": "1fcbd8eb-07f5-4362-b845-adc2d7ac5c18",
+      "name": "Search by Text"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "http://sporohealthdev.eastus.cloudapp.azure.com:5011/icd/entity/search",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "jaundice"
+            },
+            {
+              "name": "useFlexisearch",
+              "value": "false"
+            },
+            {
+              "name": "flatResults",
+              "value": "true"
+            },
+            {
+              "name": "highlightingEnabled",
+              "value": "true"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "API-Version",
+              "value": "v2"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        220,
+        620
+      ],
+      "id": "1cbff931-3293-48b7-a8e6-6dd718f027d2",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "url": "http://sporohealthdev.eastus.cloudapp.azure.com:5011/icd/entity/",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "id",
+              "value": "1056591229"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            },
+            {
+              "name": "API-Version",
+              "value": "v2"
+            },
+            {
+              "name": "Accept-Language",
+              "value": "en"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        540,
+        620
+      ],
+      "id": "f74ce9b6-4831-4640-9229-57ca62fe7017",
+      "name": "HTTP Request1"
+    },
+    {
+      "parameters": {
+        "toolDescription": "Get the details of an entity by id from ICD10 api",
+        "url": "=http://sporohealthdev.eastus.cloudapp.azure.com:5011/icd/entity/",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {
+              "name": "id"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            },
+            {
+              "name": "API-Version",
+              "valueProvider": "fieldValue",
+              "value": "v2"
+            },
+            {
+              "name": "Accept-Language",
+              "valueProvider": "fieldValue",
+              "value": "en"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        340
+      ],
+      "id": "e8908790-3107-41e6-9c1a-dc8e9145e49d",
+      "name": "Get details by id"
+    },
+    {
+      "parameters": {},
+      "id": "c18af005-3dfc-43d4-b843-3e001c3dfa57",
+      "name": "Postgres Chat Memory1",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        -540,
+        -380
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "bd1fc0e8-6c44-45a8-a8a8-413afe4fbea0",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        -200,
+        -600
+      ]
+    },
+    {
+      "parameters": {
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI assistant tasked with categorizing diseases that are either dicussed by the patient or doctor's findings, you will be getting a transcript of doctor visit, using that you are supposed to extract of the information by following the instructions below\n\nYou have access to wikipedia and serpapi tool, using then you can get ICD 10 code for the disease"
+        }
+      },
+      "id": "7528d623-451e-4e0c-a36f-ebaff10d422d",
+      "name": "AI Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -580,
+        -600
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "05148b7b-b66f-4ff7-9df5-b361e963fe4a",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -760,
+        -600
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -760,
+        -380
+      ],
+      "id": "e51463fe-655a-487d-8169-73347673aaf3",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        -380,
+        -380
+      ],
+      "id": "f5b42d7e-0ae4-48e0-b96f-ab268f2ffb2b",
+      "name": "Wikipedia1"
+    },
+    {
+      "parameters": {
+        "options": {
+          "prompt": "Instructions:\n--------------\n{instructions}\n--------------\nCompletion:\n--------------\n{completion}\n--------------\n\nAbove, the Completion did not satisfy the constraints given in the Instructions.\nError:\n--------------\n{error}\n--------------\n\nPlease try again. Please only respond with an answer that satisfies the constraints laid out in the Instructions:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        -380
+      ],
+      "id": "ab4efeec-a61b-4c46-8eba-e692b7ef1e63",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "jsonSchemaExample": "{\n    \"diagnoses\": [\n        {\n            \"disease\": {\n                \"name\": \"Mild Anemia\",\n                \"icd10_code\": \"D64.9\"\n            },\n            \"doctor_finding\": \"Hemoglobin is slightly below normal range at 12.5 g/dL, suggesting mild anemia. Packed Cell Volume (PCV) is notably above normal at 57.5%.\",\n            \"prescription\": \"Repeat blood tests in two weeks, focus on a diet rich in iron, and ensure proper hydration.\"\n        }\n    ]\n}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -140,
+        -200
+      ],
+      "id": "1df896a0-c4d7-471d-b527-884c3c34dc3d",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        -260,
+        -380
+      ],
+      "id": "ac9aabcb-e4d9-4e11-9eee-9072a57af178",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "fy3NjGNY4nOIqcT5",
+          "name": "Panindhra SerpAPI Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-27T09:55:14.167Z",
+  "versionId": "ef3ae3b8-3624-4b1e-8117-f46c733b3311"
+}
