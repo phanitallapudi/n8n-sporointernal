@@ -1,0 +1,314 @@
+{
+  "active": true,
+  "connections": {
+    "Map Fields from Webhook": {
+      "main": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Map Fields from Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatbot Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure gpt4o LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure Small Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PG Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-05T14:51:44.122Z",
+  "id": "ll0GF472cASxvi2u",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "SporoScribe Chatbot Production",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chat_input || $json.body.chat_input }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.session_id || $json.body.session_id}}",
+              "type": "string"
+            },
+            {
+              "id": "6082395a-c712-465b-9729-b61fd75ab9d5",
+              "name": "collectionName",
+              "value": "={{ $json?.collection_name || $json.body.collection_name}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fae4552c-53fd-4bb6-a56c-9958dddb367a",
+      "name": "Map Fields from Webhook",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -580,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sporoscribe-chatbot",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        20
+      ],
+      "id": "d95e7afa-43ff-4581-b04c-b557e30c7bbe",
+      "name": "Webhook",
+      "webhookId": "e5aeb2b7-f74b-4238-b46c-e832b296c792",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "pJtCoXMoWShcC1oI",
+          "name": "Sporo Scribe Production Chatbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are an AI assistant for Doctor, designed to provide accurate and helpful information to Patient. You have access to a vector retrieval tool called patient_retriever, which can fetch relevant information from the patient's knowledge base.\n\nWhen a user query is received, follow these steps:\n\n1. Analyze the user's question carefully.\n\n2. Use the patient_retriever tool to fetch relevant information by calling: patient_retriever\n\n3. The retrieved information will be provided to you as context. Review this context thoroughly\n\n4. Based on the retrieved context and your understanding of the query, formulate a clear and concise response. Ensure that your answer is directly relevant to the user's question and based solely on the information provided in the context.\n\n5. If the question asks for personal opinions, non-medical advice, or information outside the scope of patient health data or medical topics, politely decline to answer.\n\n6. Maintain a professional and helpful tone throughout your response. Do not make up information or provide details that are not explicitly stated in the retrieved context.\n\n7. If appropriate, include relevant disclaimers or additional information that may be helpful to the user, such as links to specific bank services or contact information for further assistance.\n\n8. Only respond to user question if it is available in the given context\n\nRemember, your primary goal is to provide accurate, helpful, and clear information about the patient based on the context retrieved from the patient_retriever tool.\n\nPlease process this query and provide your response according to the instructions above."
+        }
+      },
+      "id": "924c7d1a-e4ac-495a-85af-3a9d1c582687",
+      "name": "Chatbot Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -400,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        300
+      ],
+      "id": "9f46e2ad-a0f4-4051-8d15-8fff4ffdc66b",
+      "name": "Azure gpt4o LLM",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "embedding",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        640
+      ],
+      "id": "6e606633-4129-4fb9-a92d-30f7159cdb78",
+      "name": "Azure Small Embeddings",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableName": "sporoscribechatbot",
+        "contextWindowLength": 10
+      },
+      "id": "5ee5fd21-40aa-4fe2-b925-e329e7c22d20",
+      "name": "PG Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -340,
+        300
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "patient_retriever",
+        "description": "Retrieves data related to patients",
+        "topK": 5
+      },
+      "id": "13ec9269-8527-4676-add0-f829bc3b8193",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "={{ $('Map Fields from Webhook').item.json.collectionName }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        480
+      ],
+      "id": "b5804c83-ef42-4d1e-9533-449c1253636b",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "nEldplmymjSrbxqG",
+          "name": "QdrantApi Scribe Production Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "864babe5-6824-4b32-8e5b-5de6605f58f4",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [
+    {
+      "createdAt": "2025-02-05T14:52:04.315Z",
+      "updatedAt": "2025-02-05T14:52:04.315Z",
+      "id": "C5zoLNqqwpSoXUpH",
+      "name": "Don'tChange"
+    },
+    {
+      "createdAt": "2025-02-05T14:51:59.346Z",
+      "updatedAt": "2025-02-05T14:51:59.346Z",
+      "id": "IztQXWFCwgUrGRab",
+      "name": "Important"
+    }
+  ],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-18T15:43:03.100Z",
+  "versionId": "144969fd-598b-4f71-b1aa-b62b027fd5a3"
+}
