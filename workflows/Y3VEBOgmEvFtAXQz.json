@@ -1,0 +1,258 @@
+{
+  "active": false,
+  "connections": {
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-09T16:22:06.384Z",
+  "id": "Y3VEBOgmEvFtAXQz",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "general websearch workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "c12b6118-ca4f-4c14-8a74-b36f2674ca84",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        340
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## General Websearch Workflow",
+        "height": 527.3027193303974,
+        "width": 969.0343804425795
+      },
+      "id": "2d54bb65-b622-4a6b-8122-a44ea4f677ac",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "fc4cffa4-ebba-44b0-b669-976fa704094a",
+      "name": "When chat message received",
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        60,
+        120
+      ],
+      "webhookId": "18769f08-6269-4660-8f64-318ca33dc0c1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "64704c97-6aa9-4f23-bffe-0c2bdf7add5d",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1ce93035-8e44-4b02-84f8-42944990c59e",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "32ae78ca-5487-4929-895c-d654a469d2a5",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        300
+      ],
+      "webhookId": "1ce93035-8e44-4b02-84f8-42944990c59e",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "pJtCoXMoWShcC1oI",
+          "name": "Sporo Scribe Production Chatbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "agent": "openAiFunctionsAgent",
+        "options": {
+          "systemMessage": "You are a websearch tool designed to search the internet and provide summarized context based on user queries. Your task is to perform a search using the given query, retrieve relevant information, and present a concise summary of the findings.\n\n\nYou should retrieve search results for this query.\n\nTo complete this task, follow these steps:\n\n1. Perform a web search using the provided query. This will involve accessing search engines or databases to find relevant web pages, articles, or other online resources.\n\n2. Analyze the top search results. Read through the content of each result, focusing on the most relevant information related to the query.\n\n3. Summarize the key points from each result. Identify the main ideas, facts, or arguments presented in each source.\n\n4. Synthesize the information from all results into a coherent summary. Look for common themes, conflicting information, or unique perspectives across the different sources.\n\n5. Present your findings in a clear and concise manner. Your summary should provide a comprehensive overview of the topic based on the search results.\n\nFormat your response as follows:\n\n<summary>\n[Provide your synthesized summary here. This should be a cohesive paragraph or two that captures the main points from all the search results.]\n</summary>\n\n<sources>\n1. [Title of first source] - [Brief description of key points]\n2. [Title of second source] - [Brief description of key points]\n[Continue for all sources up to the specified number of results]\n</sources>\n\nRemember to maintain objectivity in your summary and accurately represent the information found in the search results. If there are conflicting viewpoints or contradictory information, make sure to include these in your summary."
+        }
+      },
+      "id": "88698a76-a1e7-4c30-9810-0265cc9bdeed",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        440,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "4e8566f4-45b6-42be-b91d-e96ee83a3d21",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        120
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        260,
+        340
+      ],
+      "id": "3af3e860-f44a-4bf4-9769-ca564c6cc262",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        660,
+        340
+      ],
+      "id": "7a350844-6033-4086-89e3-11b4fc4ab80c",
+      "name": "Wikipedia"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-09T16:24:36.020Z",
+  "versionId": "5759d228-ed6d-425a-bd06-1f224957e951"
+}
