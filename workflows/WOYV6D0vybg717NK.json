@@ -1,0 +1,418 @@
+{
+  "active": true,
+  "connections": {
+    "Map Fields from Webhook": {
+      "main": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Map Fields from Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Chatbot Agent": {
+      "main": [
+        [
+          {
+            "node": "Map Fields for reAct agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure gpt4o LLM": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure Small Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "PG Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        []
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Map Fields for reAct agent": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "SerpAPI": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          },
+          {
+            "node": "Chatbot Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-15T09:32:29.852Z",
+  "id": "WOYV6D0vybg717NK",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "SporoScribe Deep Analysis Chatbot Development",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chat_input || $json.body.chat_input }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.session_id || $json.body.session_id}}",
+              "type": "string"
+            },
+            {
+              "id": "6082395a-c712-465b-9729-b61fd75ab9d5",
+              "name": "collectionName",
+              "value": "={{ $json?.collection_name || $json.body.collection_name}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9697bedd-8720-44ce-b978-bdb9cc59589a",
+      "name": "Map Fields from Webhook",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -580,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "sporoscribe-dev-deepanalysis-chatbot",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -820,
+        20
+      ],
+      "id": "ba6873c6-65d7-42d8-9092-e96e6e531124",
+      "name": "Webhook",
+      "webhookId": "e5aeb2b7-f74b-4238-b46c-e832b296c792",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "pJtCoXMoWShcC1oI",
+          "name": "Sporo Scribe Production Chatbot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You are an AI assistant designed to provide accurate and helpful information to patients on behalf of a doctor. Your role is to analyze user queries, retrieve relevant information, and provide clear, concise, and accurate responses based solely on the retrieved information.\n\nFollow these steps to process the query and formulate your response:\n\n1. Carefully analyze the user's question.\n\n2. Review the information provided in the patient_retriever tool for getting the relevant data of patient and SerpAPI tool to get the facts from the internet. This is the only information you should use to formulate your response.\n\n3. Based on the retrieved context and your understanding of the query, formulate a clear and concise response. Ensure that your answer is directly relevant to the user's question and based solely on the information provided in the context.\n\n4. If the question asks for personal opinions, non-medical advice, or information outside the scope of patient health data or medical topics, politely decline to answer.\n\n5. Maintain a professional and helpful tone throughout your response. Do not make up information or provide details that are not explicitly stated in the retrieved context.\n\n6. If appropriate, include relevant disclaimers or additional information that may be helpful to the user, such as links to specific medical services or contact information for further assistance.\n\n7. Only respond to the user's question if the information is available in the given context.\n\n8. Include all the citation links in the response so that the user can visit the website to validate the output if there are any.\n\nRemember to maintain a professional tone, provide accurate information based solely on the given context, and prioritize the patient's well-being in your response."
+        }
+      },
+      "id": "16791ed8-a086-4283-8c2b-e42f635a7cc6",
+      "name": "Chatbot Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -400,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -480,
+        320
+      ],
+      "id": "8b24fd2d-1444-464e-977c-6a189988d031",
+      "name": "Azure gpt4o LLM",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "embedding",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        640
+      ],
+      "id": "8d8d0e39-7ea3-4b17-b8a7-aa30ee754c18",
+      "name": "Azure Small Embeddings",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "tableName": "sporoscribechatbot",
+        "contextWindowLength": 3
+      },
+      "id": "b757d87c-9697-4a28-aa35-9c7730970179",
+      "name": "PG Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -340,
+        320
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "patient_retriever",
+        "description": "Retrieves data related to patients",
+        "topK": 100
+      },
+      "id": "ae9ad2d1-5a06-4bea-af49-3684af90f1e9",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        -140,
+        280
+      ]
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "={{ $('Map Fields from Webhook').item.json.collectionName }}",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        -100,
+        480
+      ],
+      "id": "66ce1b2d-9fc4-482f-88c5-10c376914389",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "l4fXTtavNyoHBFPo",
+          "name": "QdrantApi Scribe Development Account "
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        540,
+        80
+      ],
+      "id": "c20ff07f-058a-4cf8-80a6-d948f47f0d13",
+      "name": "Respond to Webhook"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        240,
+        460
+      ],
+      "id": "fd2128e0-9515-4a2d-bd89-7086137ecb0f",
+      "name": "Wikipedia"
+    },
+    {
+      "parameters": {
+        "agent": "reActAgent",
+        "options": {
+          "prefix": "=You are a research assistant AI tasked with creating a comprehensive report based on user input. Your goal is to produce a well-structured, informative, and objective report that addresses the specific analysis requested. You have access to the SerpAPI tool to gather additional facts from the internet if needed.\n\n\nTo create this report, follow these steps:\n\n1. Analyze the user prompt to understand the specific topic and type of analysis requested.\n2. Use the SerpAPI tool to gather relevant information from the internet.\n3. Organize the information you've gathered and plan your report structure.\n4. Write the report using the following guidelines:\n\nReport Structure and Formatting:\na. Create a clear title that reflects the specific analysis requested.\nb. Begin with a concise executive summary.\nc. Organize the report into relevant sections based on the analysis requested.\nd. Use markdown formatting for emphasis, lists, and structure. Use ## for section headers, * or - for bullet points, and *bold* or italic for emphasis.\n\nContent Integration and Objectivity:\ne. Integrate information from sources naturally without explicitly referencing them by number.\nf. Maintain objectivity while addressing the specific aspects requested in the prompt.\ng. Compare and contrast the information from each source, noting areas of consensus or points of contention.\nh. Showcase key insights, important data, or innovative ideas.\n\nCitations:\ni. Include all the citation links in the response so that the user can visit the websites to validate the output if necessary. Place these at the end of the report under a \"Sources\" section.\n\nOnce you have completed your research and organized your thoughts, write your final report below."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        160,
+        80
+      ],
+      "id": "90d1b6f6-c6cc-4ae7-ac35-6a2ae1216452",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e533211e-bac7-4fe5-a2a4-a43b32a17948",
+              "name": "chatInput",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -40,
+        80
+      ],
+      "id": "f27f3157-ac82-45db-9eda-959f362d00fd",
+      "name": "Map Fields for reAct agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolSerpApi",
+      "typeVersion": 1,
+      "position": [
+        240,
+        280
+      ],
+      "id": "3e0d9675-5012-48b4-89c1-c037c1e4efb6",
+      "name": "SerpAPI",
+      "credentials": {
+        "serpApi": {
+          "id": "fy3NjGNY4nOIqcT5",
+          "name": "Panindhra SerpAPI Key"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 1,
+  "updatedAt": "2025-02-16T11:25:29.439Z",
+  "versionId": "80f3037f-138b-46cd-a637-685ae5d1263c"
+}
