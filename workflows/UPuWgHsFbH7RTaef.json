@@ -1,0 +1,405 @@
+{
+  "active": true,
+  "connections": {
+    "Azure OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Judge Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_languageModel",
+            "index": 0
+          },
+          {
+            "node": "Raw LLM Knowledge Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Initial fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure Small Embeddings": {
+      "ai_embedding": [
+        [
+          {
+            "node": "Qdrant Vector Store",
+            "type": "ai_embedding",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Qdrant Vector Store": {
+      "ai_vectorStore": [
+        [
+          {
+            "node": "Vector Store Tool",
+            "type": "ai_vectorStore",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Vector Store Tool": {
+      "ai_tool": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "RAG Agent": {
+      "main": [
+        [
+          {
+            "node": "Judge Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Initial fields": {
+      "main": [
+        [
+          {
+            "node": "Raw LLM Knowledge Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Judge Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Auto-fixing Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Raw LLM Knowledge Agent",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Raw LLM Knowledge Agent": {
+      "main": [
+        [
+          {
+            "node": "RAG Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Structured Output Parser": {
+      "ai_outputParser": [
+        [
+          {
+            "node": "Auto-fixing Output Parser",
+            "type": "ai_outputParser",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Initial fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-03-01T09:39:55.233Z",
+  "id": "UPuWgHsFbH7RTaef",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Sporo ICD10 Analyzer with Judge",
+  "nodes": [
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        80,
+        880
+      ],
+      "id": "5f7d9b23-6530-435d-80df-bdcd5172db69",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "55089145-246d-4330-b8a9-c8e724e2999f",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        920,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "edd83188-a82d-422c-a108-d54005c65c81",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -1000,
+        -60
+      ],
+      "id": "ead22cc0-c7cf-4144-a9fa-6e37c682b74b",
+      "name": "Webhook",
+      "webhookId": "edd83188-a82d-422c-a108-d54005c65c81"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c46e6ed6-0a28-48ac-80b2-5f4079e53fc4",
+      "name": "Initial fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -740,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "model": "embedding",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.embeddingsAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        460,
+        660
+      ],
+      "id": "debdfe2d-39eb-4d99-a31c-1ed70eb94e73",
+      "name": "Azure Small Embeddings",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "qdrantCollection": {
+          "__rl": true,
+          "value": "=ICD10-27022025",
+          "mode": "id"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.vectorStoreQdrant",
+      "typeVersion": 1,
+      "position": [
+        340,
+        460
+      ],
+      "id": "7715581b-da88-442f-a269-6f1e33385217",
+      "name": "Qdrant Vector Store",
+      "credentials": {
+        "qdrantApi": {
+          "id": "WbRrEE5oRKvtGrpw",
+          "name": "Sporo Health Internal Qdrant 6334"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "name": "retriever",
+        "description": "Retrieves data related to ICD 10 codes",
+        "topK": 10
+      },
+      "id": "d2412811-a898-436d-b442-ab2255292343",
+      "name": "Vector Store Tool",
+      "type": "@n8n/n8n-nodes-langchain.toolVectorStore",
+      "typeVersion": 1,
+      "position": [
+        160,
+        300
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Initial fields').item.json.chatInput }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI assistant tasked with categorizing diseases that are either dicussed by the patient or doctor's findings, you will be getting a transcript of doctor visit, using that you are supposed to extract of the information by following the instructions below\n\nYou have access to retriever tool, using then you can get ICD 10 code for the disease and vice versa"
+        }
+      },
+      "id": "cb8fae3a-eefb-43ba-8b22-eb8eb8f5d3c8",
+      "name": "RAG Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        0,
+        40
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Initial fields').item.json.chatInput }}",
+        "options": {
+          "systemMessage": "=You are a medical coding assistant acting as a judge. Your task is to review the provided medical notes and two separate outputs containing ICD-10 codes. Based solely on the information in the medical notes and the evidence from the two outputs, determine the correct final set of ICD-10 codes. For each diagnosis, provide only the final ICD-10 codes along with a concise description. Do not include any additional commentary or information.\n\nInstructions:\n\n1. Input Provided:\n   - A medical note containing all relevant clinical details.\n   - Two sets of outputs from different assistants, each proposing ICD-10 codes.\n\n2. Evaluation Criteria:\n   - Verify that the codes match the diagnosis described in the medical note.\n   - Consider factors such as the type of infectious agent, specificity of the diagnosis, medical context, anatomical localization, resistance information, and any relevant patient information.\n   - Compare the evidence cited by both outputs. Only include codes that are supported by clear evidence from the medical note.\n\n3. Output Requirements:\n   - For each final diagnosis, list:\n     - ICD-10 Code(s): The final correct code(s).\n     - Description: A brief description that justifies the selection.\n   - The output should include only the ICD-10 codes with their descriptions. Do not include any other text, commentary, or extraneous information.\n\nFind all the inputs or context:\n\n\nAssistant Output 1: {{ $('Raw LLM Knowledge Agent').item.json.output }}\n\nAssistant Output 2: {{ $('RAG Agent').item.json.output }}\n\n\nExample Final Output (Illustrative Only):\n\nDiagnosis: [Write the diagnosis]\n- ICD-10 Code(s): [Write the ICD-10 Code]\n- Description: [A short description]\n\nDiagnosis: [Write the diagnosis]\n- ICD-10 Code(s): [Write the ICD-10 Code]\n- Description: [A short description]\n\nReminder:\n- Act purely as a judge to select the most accurate and evidence-backed codes.\n- Include only the final ICD-10 codes and their descriptions as the final output below and nothing else:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        480,
+        40
+      ],
+      "id": "30bc71b6-1745-4d43-86e3-1d4dfbe2acb9",
+      "name": "Judge Agent"
+    },
+    {
+      "parameters": {
+        "options": {
+          "prompt": "Instructions:\n--------------\n{instructions}\n--------------\nCompletion:\n--------------\n{completion}\n--------------\n\nAbove, the Completion did not satisfy the constraints given in the Instructions.\nError:\n--------------\n{error}\n--------------\n\nPlease try again. Please only respond with an answer that satisfies the constraints laid out in the Instructions:"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserAutofixing",
+      "typeVersion": 1,
+      "position": [
+        -300,
+        240
+      ],
+      "id": "b96b2257-7389-4a8a-8487-b297556454a4",
+      "name": "Auto-fixing Output Parser"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Initial fields').item.json.chatInput }}",
+        "hasOutputParser": true,
+        "options": {
+          "systemMessage": "=You are an AI assistant tasked with categorizing diseases that are either dicussed by the patient or doctor's findings, you will be getting a transcript of doctor visit, using that you are supposed to extract of the information by following the instructions below\n\nYou have access to retriever tool, using then you can get ICD 10 code for the disease and vice versa"
+        }
+      },
+      "id": "9bbf03a3-2a0c-4016-b9bd-032a66e34e6f",
+      "name": "Raw LLM Knowledge Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        -500,
+        40
+      ],
+      "retryOnFail": true,
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "schemaType": "manual",
+        "inputSchema": "{\n  \"$schema\": \"http://json-schema.org/draft-07/schema#\",\n  \"type\": \"object\",\n  \"properties\": {\n    \"diagnoses\": {\n      \"type\": \"array\",\n      \"items\": {\n        \"type\": \"object\",\n        \"properties\": {\n          \"name\": {\n            \"type\": \"string\",\n            \"description\": \"The name of the diagnosis.\"\n          },\n          \"icd10_code\": {\n            \"type\": \"string\",\n            \"description\": \"The ICD-10 code associated with the diagnosis.\"\n          },\n          \"physician_finding\": {\n            \"type\": \"string\",\n            \"description\": \"The physician's findings related to the diagnosis.\"\n          }\n        },\n        \"required\": [\"name\", \"icd10_code\", \"physician_finding\"]\n      }\n    }\n  },\n  \"required\": [\"diagnoses\"]\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.outputParserStructured",
+      "typeVersion": 1.2,
+      "position": [
+        -120,
+        400
+      ],
+      "id": "9d19d46d-e8dc-4169-a282-02d057a5e5ab",
+      "name": "Structured Output Parser"
+    },
+    {
+      "parameters": {
+        "public": true,
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -1000,
+        160
+      ],
+      "id": "93bc13c7-2a12-4f8d-8bab-fd49c3c4b1dd",
+      "name": "When chat message received",
+      "webhookId": "5f79f1c1-a5ba-46da-8a69-990a65f07fba"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 3,
+  "updatedAt": "2025-03-01T09:53:12.939Z",
+  "versionId": "2b124d97-f09c-4207-843e-aac57bc4f6a8"
+}
