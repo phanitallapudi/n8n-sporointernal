@@ -1,0 +1,569 @@
+{
+  "active": false,
+  "connections": {
+    "Login": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent1": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Azure OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory1": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "AI Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Anthropic Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wikipedia": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Postgres Chat Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Test workflow’": {
+      "main": [
+        [
+          {
+            "node": "DuckDuckGo1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "createdAt": "2025-02-08T14:23:48.126Z",
+  "id": "1LljKt1PGd7qLJEW",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Playground",
+  "nodes": [
+    {
+      "parameters": {
+        "toolDescription": "This tool is to used to get all bearer token with username and password",
+        "method": "POST",
+        "url": "=https://sporohealth.eastus.cloudapp.azure.com/login",
+        "sendHeaders": true,
+        "parametersHeaders": {
+          "values": [
+            {
+              "name": "accept",
+              "valueProvider": "fieldValue",
+              "value": "application/json"
+            },
+            {
+              "name": "Content-Type",
+              "valueProvider": "fieldValue",
+              "value": "application/x-www-form-urlencoded"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"remember_me\": false,\n  \"grant_type\": \"\",\n  \"username\": \"{{ $fromAI('username', 'User name given by the user') }}\",\n  \"password\": \"{{ $fromAI('password', 'Password given by the user') }}\",\n  \"scope\": \"\",\n  \"client_id\": \"\",\n  \"client_secret\": \"\"\n}\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        80,
+        1120
+      ],
+      "id": "e606b03d-745c-4702-a45a-02b7e5297203",
+      "name": "Login",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "c65895f5-8b2b-4ca7-9c61-440ce51c240a",
+      "name": "Respond to Webhook1",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        220,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://sporohealth.eastus.cloudapp.azure.com/login",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "accept",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "contentType": "form-urlencoded",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "remember_me",
+              "value": "false"
+            },
+            {
+              "name": "grant_type"
+            },
+            {
+              "name": "username",
+              "value": "phaniiiii"
+            },
+            {
+              "name": "password",
+              "value": "Test@123"
+            },
+            {
+              "name": "scope"
+            },
+            {
+              "name": "client_id"
+            },
+            {
+              "name": "client_secret"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        280,
+        1120
+      ],
+      "id": "c8f208f2-a45d-4bba-82e2-133aa3e48711",
+      "name": "HTTP Request",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        -240,
+        1120
+      ],
+      "id": "afe92a94-5064-4a2f-b441-484ced61d479",
+      "name": "Azure OpenAI Chat Model1",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "=You can take username and password, use the Login tool to get bearer token"
+        }
+      },
+      "id": "3e4045c2-fda1-4a07-aee0-ddafd769025f",
+      "name": "AI Agent1",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        -200,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "tableName": "crawl4ai_docker",
+        "contextWindowLength": 10
+      },
+      "id": "5dbe5c08-c84b-482a-b31d-3c715f3a324c",
+      "name": "Postgres Chat Memory1",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        -100,
+        1120
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "fb17ad18-cc09-40bc-8dbf-65763ecbc272",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -340,
+        840
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "cf4070e8-a1de-4a79-82ff-bfe6c85395cf",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        -560,
+        740
+      ],
+      "id": "4e2a3972-1d3b-479b-9790-bd87084cab97",
+      "name": "Webhook1",
+      "webhookId": "cf4070e8-a1de-4a79-82ff-bfe6c85395cf",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAnthropic",
+      "typeVersion": 1.2,
+      "position": [
+        380,
+        340
+      ],
+      "id": "8584a13f-f7ab-475e-8262-f91db7a03bf0",
+      "name": "Anthropic Chat Model",
+      "credentials": {
+        "anthropicApi": {
+          "id": "vIFOjcNiJjebQREB",
+          "name": "Anthropic account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolWikipedia",
+      "typeVersion": 1,
+      "position": [
+        660,
+        340
+      ],
+      "id": "2d0884fe-dff3-4aef-9d6c-37578374da3a",
+      "name": "Wikipedia",
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "model": "gpt-4o",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatAzureOpenAi",
+      "typeVersion": 1,
+      "position": [
+        260,
+        340
+      ],
+      "id": "8ac6fcff-aac4-4c6e-8e80-8094cf196784",
+      "name": "Azure OpenAI Chat Model",
+      "credentials": {
+        "azureOpenAiApi": {
+          "id": "yv2wYsxAI7IfH4yl",
+          "name": "Azure Open AI account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "75ebfdef-c8e2-4c3e-b716-1479d0cc2a73",
+              "name": "chatInput",
+              "value": "={{ $json?.chatInput || $json.body.chatInput }}",
+              "type": "string"
+            },
+            {
+              "id": "59b7a20f-0626-4861-93e2-015d430c266e",
+              "name": "sessionId",
+              "value": "={{ $json?.sessionId || $json.body.sessionId}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "aa6d0017-8fd1-46e5-b2fb-f18538764340",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        120
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "72d9b7f2-0177-4400-b4ae-804748297290",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.6,
+      "position": [
+        440,
+        120
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "1ce93035-8e44-4b02-84f8-42944990c59e",
+        "authentication": "basicAuth",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "14259a6f-2d3d-4789-93ad-2b0ff474cb21",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [
+        60,
+        300
+      ],
+      "webhookId": "1ce93035-8e44-4b02-84f8-42944990c59e",
+      "credentials": {
+        "httpBasicAuth": {
+          "id": "pJtCoXMoWShcC1oI",
+          "name": "Sporo Scribe Production Chatbot"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "id": "d9b459f6-c66d-40c3-b40a-75b50dc0a957",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [
+        820,
+        120
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {
+        "content": "## General Websearch Workflow",
+        "height": 527.3027193303974,
+        "width": 969.0343804425795
+      },
+      "id": "6246157c-38dc-41e4-979d-3299f90e15c1",
+      "name": "Sticky Note2",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ],
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "id": "7321207e-6ac9-4cad-aaf1-6cb56f154d95",
+      "name": "Postgres Chat Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.1,
+      "position": [
+        480,
+        340
+      ],
+      "credentials": {
+        "postgres": {
+          "id": "Vms2ixkRxFKJu5AV",
+          "name": "Postgres account"
+        }
+      },
+      "disabled": true
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        140,
+        1720
+      ],
+      "id": "f8cf0c2e-7787-436a-a3e5-e4a993c402cc",
+      "name": "When clicking ‘Test workflow’"
+    },
+    {
+      "parameters": {
+        "query": "icd 10 code for hypertension"
+      },
+      "type": "n8n-nodes-duckduckgo.duckDuckGoNode",
+      "typeVersion": 1,
+      "position": [
+        580,
+        1720
+      ],
+      "id": "83d1e2a1-8294-4684-b095-5abfa9030b4a",
+      "name": "DuckDuckGo1"
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-28T16:15:14.864Z",
+  "versionId": "edd935e0-bad1-4632-8e36-a1fda9357aac"
+}
