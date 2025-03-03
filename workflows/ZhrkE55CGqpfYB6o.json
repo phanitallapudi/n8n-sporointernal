@@ -1,0 +1,55 @@
+{
+  "active": false,
+  "connections": {
+    "Gmail Trigger": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "createdAt": "2025-02-27T05:58:46.014Z",
+  "id": "ZhrkE55CGqpfYB6o",
+  "meta": {
+    "templateCredsSetupCompleted": true
+  },
+  "name": "Gmail Playground",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -160,
+        -40
+      ],
+      "id": "0eeced5f-5d0e-4a5c-b95d-c4d6f46a8b6a",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "t1K4OApTJ6XXs2kR",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-02-27T08:31:10.849Z",
+  "versionId": "b6630009-7b0d-4e72-9e90-70e21f8c7651"
+}
